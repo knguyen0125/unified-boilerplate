@@ -17,7 +17,7 @@ async function bootstrap() {
 
   // Make sure that the metadata file does not block app start up
   /* eslint-disable import/no-unresolved,@typescript-eslint/ban-ts-comment */
-  // @ts-expect-error
+  // @ts-ignore
   await import('./metadata')
     .then(async (metadata) => {
       await SwaggerModule.loadPluginMetadata(metadata.default);
