@@ -14,6 +14,17 @@ async function bootstrap() {
     .setDescription('Backend')
     .setVersion('1.0')
     .build();
+
+  // Make sure that the metadata file does not block app start up
+  await import('./metadata')
+    .then(async (metadata) => {
+      await SwaggerModule.loadPluginMetadata(metadata.default);
+    })
+    .catch((e) => {
+      console.error('Error loading metadata', e);
+    });
+
+  // await SwaggerModule.loadPluginMetadata(metadata);
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 

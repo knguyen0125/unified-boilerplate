@@ -7,6 +7,7 @@ import {
   NestRedisModule,
   NestScheduleModule,
 } from '@/libs';
+import { AppController } from './app/app.controller';
 
 @Module({
   imports: [
@@ -17,5 +18,6 @@ import {
     NestRabbitMQModule,
     NestScheduleModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
