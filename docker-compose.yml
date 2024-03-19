@@ -8,6 +8,7 @@ services:
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
       - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
       - --entrypoints.postgres.address=:5432
       - --entrypoints.redis.address=:6379
       - --entrypoints.rabbitmq.address=:5672
@@ -21,6 +22,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - nestjs-network
+
   admin:
     build:
       context: .
@@ -35,6 +37,7 @@ services:
       - 'traefik.http.services.admin.loadbalancer.server.port=8080'
     networks:
       - nestjs-network
+
   frontend:
     build:
       context: .
@@ -49,6 +52,7 @@ services:
       - 'traefik.http.services.frontend.loadbalancer.server.port=8080'
     networks:
       - nestjs-network
+
   backend:
     build:
       context: .
@@ -63,12 +67,15 @@ services:
       - 'traefik.http.services.backend.loadbalancer.server.port=8080'
     networks:
       - nestjs-network
+
   postgres:
     image: public.ecr.aws/docker/library/postgres:16.2
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: nestjs
+    volumes:
+      - postgres:/var/lib/postgresql/data
     networks:
       - nestjs-network
     labels:
@@ -76,19 +83,29 @@ services:
       - 'traefik.tcp.routers.postgres.rule=HostSNI(`*`)'
       - 'traefik.tcp.routers.postgres.entrypoints=postgres'
       - 'traefik.tcp.services.postgres.loadbalancer.server.port=5432'
+
   redis:
     image: public.ecr.aws/docker/library/redis:7.2
     networks:
       - nestjs-network
+    command: /bin/sh -c 'redis-server --requirepass $${REDIS_PASSWORD}'
+    environment:
+      REDIS_PASSWORD: redis
     labels:
       - 'traefik.enable=true'
       - 'traefik.tcp.routers.redis.rule=HostSNI(`*`)'
       - 'traefik.tcp.routers.redis.entrypoints=redis'
       - 'traefik.tcp.services.redis.loadbalancer.server.port=6379'
+
   rabbitmq:
     image: public.ecr.aws/docker/library/rabbitmq:3.13-management
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbitmq
+      RABBITMQ_DEFAULT_PASS: rabbitmq
     networks:
       - nestjs-network
+    volumes:
+      - rabbitmq:/var/lib/rabbitmq/mnesia
     labels:
       - 'traefik.enable=true'
       - 'traefik.tcp.routers.rabbitmq.rule=HostSNI(`*`)'
