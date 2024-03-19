@@ -1,5 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Response } from 'express';
 import { TestDto } from './dto/test.dto';
 
 @ApiTags('app')
@@ -11,8 +12,8 @@ export class AppController {
    * @returns Void
    */
   @ApiOperation({ summary: 'Health ' })
-  @Post()
-  health(@Body() body: TestDto) {
-    return { body };
+  @Get()
+  health(@Body() body: TestDto, @Res() res: Response) {
+    return res.render('index', { message: 'Hello World!' });
   }
 }

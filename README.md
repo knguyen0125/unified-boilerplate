@@ -10,7 +10,7 @@
 
 ```bash
 # Generate Local SSL certificate and install with system trust store. Requires mkcert. Only need to run once
-./certs.sh
+./mkcert.sh
 
 # Start the local development
 docker-compose up --build -d

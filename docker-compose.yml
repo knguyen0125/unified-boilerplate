@@ -105,6 +105,7 @@ services:
     command: ['npm', 'run', 'migrate', '-w', 'migrations']
     volumes:
       - ./apps:/workspace/apps
+      - ./migrations:/workspace/migrations
     networks:
       - nestjs-network
     environment:
@@ -120,6 +121,7 @@ services:
     command: ['npm', 'run', 'seed', '-w', 'migrations']
     volumes:
       - ./apps:/workspace/apps
+      - ./migrations:/workspace/migrations
     networks:
       - nestjs-network
     environment:
