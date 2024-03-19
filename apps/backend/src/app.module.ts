@@ -6,7 +6,7 @@ import {
   NestRabbitMQModule,
   NestRedisModule,
   NestScheduleModule,
-} from './libs';
+} from '@/libs';
 
 @Module({
   imports: [
