@@ -1,22 +1,19 @@
 import { Module } from '@nestjs/common';
-import { ConditionalModule, ConfigModule } from '@nestjs/config';
-import { ScheduleModule } from '@nestjs/schedule';
 import { NestLoggerModule } from './libs';
 import { NestRedisModule } from './libs';
 import { NestRabbitMQModule } from './libs/rabbitmq.module';
 import { NestORMModule } from './libs/orm.module';
+import { NestConfigModule } from './libs/config/config.module';
+import { NestScheduleModule } from './libs/schedule.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    NestConfigModule,
     NestLoggerModule,
     NestORMModule,
     NestRedisModule,
     NestRabbitMQModule,
-    ConditionalModule.registerWhen(
-      ScheduleModule.forRoot(),
-      (env) => env['SCHEDULER_MODE'] === 'true',
-    ),
+    NestScheduleModule,
   ],
 })
 export class AppModule {}
