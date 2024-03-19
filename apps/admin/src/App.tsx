@@ -1,9 +1,5 @@
-import { useState } from 'react';
-
 function App() {
-  const [count, setCount] = useState(0);
-
-  return <div>This is the admin page</div>;
+  return <div className="bg-red-500">This is the admin page</div>;
 }
 
 export default App;
