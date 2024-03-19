@@ -74,16 +74,10 @@ services:
       DATABASE_PASSWORD: postgres
       DATABASE_NAME: nestjs
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/nestjs
-      REDIS_HOST: redis
-      REDIS_PORT: '6379'
-      REDIS_USER: default
-      REDIS_PASSWORD: redis
       REDIS_URL: redis://default:redis@redis:6379
-      RABBITMQ_HOST: rabbitmq
-      RABBITMQ_PORT: '5672'
-      RABBITMQ_USER: rabbitmq
-      RABBITMQ_PASSWORD: rabbitmq
       RABBITMQ_URL: amqp://rabbitmq:rabbitmq@rabbitmq:5672
+      WORKER_MODE: 'true'
+      SCHEDULER_MODE: 'true'
     volumes:
       - ./apps:/workspace/apps
     labels:
