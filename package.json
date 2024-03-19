@@ -2,9 +2,7 @@
   "name": "unified-boilerplate",
   "private": true,
   "workspaces": [
-    "admin",
-    "backend",
-    "frontend"
+    "apps/*"
   ],
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
