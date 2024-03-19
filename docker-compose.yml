@@ -1,0 +1,107 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:v2.11
+    command:
+      - --api.insecure=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.postgres.address=:5432
+      - --entrypoints.redis.address=:6379
+      - --entrypoints.rabbitmq.address=:5672
+    ports:
+      - '80:80'
+      - '5432:5432'
+      - '6379:6379'
+      - '5672:5672'
+      - '8080:8080'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - nestjs-network
+  admin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ['npm', 'run', 'dev', '-w', 'admin']
+    volumes:
+      - ./apps:/workspace/apps
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.admin.rule=Host(`admin.localhost`)'
+      - 'traefik.http.routers.admin.entrypoints=web'
+      - 'traefik.http.services.admin.loadbalancer.server.port=8080'
+    networks:
+      - nestjs-network
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ['npm', 'run', 'dev', '-w', 'frontend']
+    volumes:
+      - ./apps:/workspace/apps
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.frontend.rule=Host(`frontend.localhost`)'
+      - 'traefik.http.routers.frontend.entrypoints=web'
+      - 'traefik.http.services.frontend.loadbalancer.server.port=8080'
+    networks:
+      - nestjs-network
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ['npm', 'run', 'dev', '-w', 'backend']
+    volumes:
+      - ./apps:/workspace/apps
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.backend.rule=Host(`backend.localhost`)'
+      - 'traefik.http.routers.backend.entrypoints=web'
+      - 'traefik.http.services.backend.loadbalancer.server.port=8080'
+    networks:
+      - nestjs-network
+  postgres:
+    image: public.ecr.aws/docker/library/postgres:16.2
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: nestjs
+    networks:
+      - nestjs-network
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.tcp.routers.postgres.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.postgres.entrypoints=postgres'
+      - 'traefik.tcp.services.postgres.loadbalancer.server.port=5432'
+  redis:
+    image: public.ecr.aws/docker/library/redis:7.2
+    networks:
+      - nestjs-network
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.tcp.routers.redis.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.redis.entrypoints=redis'
+      - 'traefik.tcp.services.redis.loadbalancer.server.port=6379'
+  rabbitmq:
+    image: public.ecr.aws/docker/library/rabbitmq:3.13-management
+    networks:
+      - nestjs-network
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.tcp.routers.rabbitmq.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.rabbitmq.entrypoints=rabbitmq'
+      - 'traefik.tcp.services.rabbitmq.loadbalancer.server.port=5672'
+      - 'traefik.http.routers.rabbitmq_management.rule=Host(`rabbitmq-management.localhost`)'
+      - 'traefik.http.routers.rabbitmq_management.entrypoints=web'
+      - 'traefik.http.services.rabbitmq_management.loadbalancer.server.port=15672'
+
+volumes:
+  postgres:
+  rabbitmq:
+
+networks:
+  nestjs-network:
+    driver: bridge
