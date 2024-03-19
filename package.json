@@ -2,7 +2,8 @@
   "name": "unified-boilerplate",
   "private": true,
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "migrations"
   ],
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

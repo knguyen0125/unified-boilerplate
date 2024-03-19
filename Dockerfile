@@ -10,6 +10,8 @@ COPY apps/admin/package.json apps/admin/package.json
 COPY apps/backend/package.json apps/backend/package.json
 COPY apps/frontend/package.json apps/frontend/package.json
 
+COPY migrations/package.json migrations/package.json
+
 RUN npm install
 
 COPY . .
