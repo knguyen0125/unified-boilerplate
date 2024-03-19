@@ -5,6 +5,9 @@ module.exports = {
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:react-hooks/recommended',
+    'plugin:import/recommended',
+    'plugin:import/typescript',
+    'plugin:prettier/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
@@ -14,5 +17,14 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    'import/default': 'off',
+    'import/no-named-as-default-member': 'off',
+    'import/order': 'error',
   },
-}
+  settings: {
+    'import/resolver': {
+      typescript: true,
+      node: true,
+    },
+  },
+};

@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { Logger } from 'nestjs-pino';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -16,6 +16,8 @@ async function bootstrap() {
     .build();
 
   // Make sure that the metadata file does not block app start up
+  /* eslint-disable import/no-unresolved,@typescript-eslint/ban-ts-comment */
+  // @ts-expect-error
   await import('./metadata')
     .then(async (metadata) => {
       await SwaggerModule.loadPluginMetadata(metadata.default);
@@ -23,6 +25,7 @@ async function bootstrap() {
     .catch((e) => {
       console.error('Error loading metadata', e);
     });
+  /* eslint-enable import/no-unresolved,@typescript-eslint/ban-ts-comment */
 
   // await SwaggerModule.loadPluginMetadata(metadata);
   const document = SwaggerModule.createDocument(app, config);

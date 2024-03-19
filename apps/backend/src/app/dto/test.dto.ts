@@ -2,16 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsAlpha, Max } from 'class-validator';
 
 export class TestDto {
-  /**
-   * Title
-   */
+  /** Title */
   @ApiProperty()
   @IsAlpha()
   title: string;
 
-  /**
-   * Age
-   */
+  /** Age */
   @ApiProperty()
   @Max(100)
   age: number;

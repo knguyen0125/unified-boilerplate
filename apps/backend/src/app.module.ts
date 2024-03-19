@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { AppController } from './app/app.controller';
 import {
   NestConfigModule,
   NestLoggerModule,
@@ -7,7 +8,6 @@ import {
   NestRedisModule,
   NestScheduleModule,
 } from '@/libs';
-import { AppController } from './app/app.controller';
 
 @Module({
   imports: [
