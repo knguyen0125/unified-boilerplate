@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
-import { NestLoggerModule } from './libs';
-import { NestRedisModule } from './libs';
-import { NestRabbitMQModule } from './libs/rabbitmq.module';
-import { NestORMModule } from './libs/orm.module';
-import { NestConfigModule } from './libs/config/config.module';
-import { NestScheduleModule } from './libs/schedule.module';
+import {
+  NestConfigModule,
+  NestLoggerModule,
+  NestORMModule,
+  NestRabbitMQModule,
+  NestRedisModule,
+  NestScheduleModule,
+} from './libs';
 
 @Module({
   imports: [
