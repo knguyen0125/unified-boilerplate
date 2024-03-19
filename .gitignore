@@ -247,3 +247,6 @@ sketch
 #!! ERROR: vscode is undefined. Use list command to see defined gitignore types !!#
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,vscode,node,react,vite
+
+certs/*
+!certs/config.yml

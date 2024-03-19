@@ -7,19 +7,24 @@ services:
       - --api.insecure=true
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
+      - --providers.file.filename=/etc/traefik/certs.yml
       - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
       - --entrypoints.websecure.address=:443
       - --entrypoints.postgres.address=:5432
       - --entrypoints.redis.address=:6379
       - --entrypoints.rabbitmq.address=:5672
     ports:
       - '80:80'
+      - '443:443'
       - '5432:5432'
       - '6379:6379'
       - '5672:5672'
       - '8080:8080'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./certs:/etc/certs
+      - ./certs/config.yml:/etc/traefik/certs.yml
     networks:
       - nestjs-network
 
@@ -32,8 +37,11 @@ services:
       - ./apps:/workspace/apps
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.admin.rule=Host(`admin.localhost`)'
-      - 'traefik.http.routers.admin.entrypoints=web'
+      - 'traefik.http.routers.admin.rule=Host(`admin.local.gd`)'
+      - 'traefik.http.routers.admin.entrypoints=websecure'
+      - 'traefik.http.routers.admin.tls=true'
+      - 'traefik.http.routers.admin.tls.domains[0].main=local.gd'
+      - 'traefik.http.routers.admin.tls.domains[0].sans=*.local.gd'
       - 'traefik.http.services.admin.loadbalancer.server.port=8080'
     networks:
       - nestjs-network
@@ -47,8 +55,9 @@ services:
       - ./apps:/workspace/apps
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.frontend.rule=Host(`frontend.localhost`)'
-      - 'traefik.http.routers.frontend.entrypoints=web'
+      - 'traefik.http.routers.frontend.rule=Host(`frontend.local.gd`)'
+      - 'traefik.http.routers.frontend.entrypoints=websecure'
+      - 'traefik.http.routers.frontend.tls=true'
       - 'traefik.http.services.frontend.loadbalancer.server.port=8080'
     networks:
       - nestjs-network
@@ -62,8 +71,9 @@ services:
       - ./apps:/workspace/apps
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.backend.rule=Host(`backend.localhost`)'
-      - 'traefik.http.routers.backend.entrypoints=web'
+      - 'traefik.http.routers.backend.rule=Host(`backend.local.gd`)'
+      - 'traefik.http.routers.backend.entrypoints=websecure'
+      - 'traefik.http.routers.backend.tls=true'
       - 'traefik.http.services.backend.loadbalancer.server.port=8080'
     networks:
       - nestjs-network
@@ -111,8 +121,9 @@ services:
       - 'traefik.tcp.routers.rabbitmq.rule=HostSNI(`*`)'
       - 'traefik.tcp.routers.rabbitmq.entrypoints=rabbitmq'
       - 'traefik.tcp.services.rabbitmq.loadbalancer.server.port=5672'
-      - 'traefik.http.routers.rabbitmq_management.rule=Host(`rabbitmq-management.localhost`)'
-      - 'traefik.http.routers.rabbitmq_management.entrypoints=web'
+      - 'traefik.http.routers.rabbitmq_management.rule=Host(`rabbitmq-management.local.gd`)'
+      - 'traefik.http.routers.rabbitmq_management.entrypoints=websecure'
+      - 'traefik.http.routers.rabbitmq_management.tls=true'
       - 'traefik.http.services.rabbitmq_management.loadbalancer.server.port=15672'
 
 volumes:

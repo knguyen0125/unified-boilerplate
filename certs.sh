@@ -1,0 +1,1 @@
+mkcert -install -cert-file certs/cert.pem -key-file certs/cert.key.pem "local.gd" "*.local.gd"
