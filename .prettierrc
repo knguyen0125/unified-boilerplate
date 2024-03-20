@@ -4,5 +4,6 @@
   "plugins": [
     "prettier-plugin-jsdoc",
     "prettier-plugin-tailwindcss"
-  ]
+  ],
+  "tsdoc": true
 }

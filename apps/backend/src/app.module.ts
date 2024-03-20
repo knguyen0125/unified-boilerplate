@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { APP_PIPE } from '@nestjs/core';
 import { JoiPipeModule } from 'nestjs-joi';
 import { AppController } from './app/app.controller';
 import {
