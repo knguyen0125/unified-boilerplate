@@ -25,6 +25,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     'import/default': 'off',
     'import/no-named-as-default-member': 'off',
+    'import/no-named-as-default': 'off',
     'import/order': 'error',
   },
   settings: {
