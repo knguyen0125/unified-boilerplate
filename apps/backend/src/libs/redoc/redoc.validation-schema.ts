@@ -1,37 +1,48 @@
-import { z } from 'zod';
 import { OpenAPIObject } from '@nestjs/swagger';
+import Joi from 'joi';
 
 export const schema = (document: OpenAPIObject) =>
-  z.object({
-    title: z
-      .string()
-      .optional()
-      .default(document.info ? document.info.title : 'Swagger documentation'),
-    favicon: z.string().optional(),
-    logo: z
-      .object({
-        url: z.string().optional(),
-        backgroundColor: z.string().optional(),
-        altText: z.string().optional(),
-        href: z.string().optional(),
-      })
-      .optional(),
-    tagGroups: z
-      .array(
-        z.object({
-          name: z.string(),
-          tags: z.array(z.string()),
+  Joi.object({
+    title: Joi.string().default(
+      document.info ? document.info.title : 'Swagger documentation',
+    ),
+    favicon: Joi.string().optional(),
+    logo: Joi.object({
+      url: Joi.string().optional(),
+      backgroundColor: Joi.string().optional(),
+      altText: Joi.string().optional(),
+      href: Joi.string().optional(),
+    }).optional(),
+    tagGroups: Joi.array()
+      .items(
+        Joi.object({
+          name: Joi.string(),
+          tags: Joi.array().items(Joi.string()),
         }),
       )
       .optional(),
-    docName: z.string().optional().default('swagger'),
-    auth: z
-      .object({
-        enabled: z.boolean().default(false),
-        user: z.string().optional().default('admin'),
-        password: z.string().optional().default('admin'),
-      })
-      .optional(),
+    docName: Joi.string().optional().default('swagger'),
+    auth: Joi.object({
+      enabled: Joi.boolean().default(false),
+      user: Joi.string().optional().default('admin'),
+      password: Joi.string().optional().default('admin'),
+    }).optional(),
   });
 
-export type RedocOptions = z.infer<ReturnType<typeof schema>>;
+export type RedocOptions = {
+  title?: string;
+  favicon?: string;
+  logo?: {
+    url?: string;
+    backgroundColor?: string;
+    altText?: string;
+    href?: string;
+  };
+  tagGroups?: Array<{ name: string; tags: string[] }>;
+  docName?: string;
+  auth?: {
+    enabled: boolean;
+    user?: string;
+    password?: string;
+  };
+};

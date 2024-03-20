@@ -1,14 +1,11 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsAlpha, Max } from 'class-validator';
+import { JoiSchema } from 'nestjs-joi';
+import Joi from 'joi';
+import { BaseDto } from '@/libs/dtos/base.dto';
 
-export class TestDto {
-  /** Title */
-  @ApiProperty()
-  @IsAlpha()
+export class TestDto extends BaseDto {
+  @JoiSchema(Joi.string().required().description('Title'))
   title: string;
 
-  /** Age */
-  @ApiProperty()
-  @Max(100)
+  @JoiSchema(Joi.number().required().description('User age'))
   age: number;
 }

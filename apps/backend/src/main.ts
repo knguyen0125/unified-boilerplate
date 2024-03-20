@@ -12,7 +12,8 @@ async function bootstrap() {
     bufferLogs: true,
     rawBody: true,
   });
-  app.useLogger(app.get(Logger));
+  const logger = app.get(Logger);
+  app.useLogger(logger);
 
   // Trust X-Forwarded-* headers
   app.set('trust proxy', true);
@@ -23,9 +24,9 @@ async function bootstrap() {
   app.useStaticAssets(path.join(__dirname, 'public'), {
     prefix: '/public/',
   });
-
   app.setViewEngine('njk');
 
+  // Enable Swagger
   const config = new DocumentBuilder()
     .setTitle('Backend')
     .setDescription('Backend')
@@ -51,9 +52,13 @@ async function bootstrap() {
   await RedocModule.setup('/docs', app, document, {
     auth: {
       enabled: true,
+      user: 'admin',
+      password: 'admin',
     },
   });
 
   await app.listen(process.env.PORT || 8080);
+  logger.log(`Application is running on: ${await app.getUrl()}`);
 }
+
 bootstrap();

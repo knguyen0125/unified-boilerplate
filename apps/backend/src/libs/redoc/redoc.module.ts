@@ -15,7 +15,7 @@ export class RedocModule {
     document: OpenAPIObject,
     options: RedocOptions,
   ): Promise<void> {
-    const validatedOptions = schema(document).parse(options);
+    const validatedOptions = schema(document).validate(options).value;
     const redocDocument = this.addVendorExtensions(
       options,
       <RedocDocument>document,
