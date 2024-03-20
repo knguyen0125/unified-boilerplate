@@ -1,1 +1,1 @@
-npm run lint:fix --workspaces
+npm run lint:fix
