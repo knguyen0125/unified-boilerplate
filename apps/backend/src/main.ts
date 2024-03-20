@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import consolidate from 'consolidate';
 import { AppModule } from './app.module';
+import { RedocModule } from '@/libs/redoc/redoc.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -19,7 +20,9 @@ async function bootstrap() {
   // Enable Nunjucks
   app.engine('njk', consolidate.nunjucks);
   app.setBaseViewsDir(path.join(__dirname, 'views'));
-  app.useStaticAssets(path.join(__dirname, 'public'));
+  app.useStaticAssets(path.join(__dirname, 'public'), {
+    prefix: '/public/',
+  });
 
   app.setViewEngine('njk');
 
@@ -44,7 +47,12 @@ async function bootstrap() {
 
   // await SwaggerModule.loadPluginMetadata(metadata);
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+  // SwaggerModule.setup('docs', app, document);
+  await RedocModule.setup('/docs', app, document, {
+    auth: {
+      enabled: true,
+    },
+  });
 
   await app.listen(process.env.PORT || 8080);
 }
