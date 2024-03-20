@@ -1,5 +1,10 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Res } from '@nestjs/common';
+import {
+  ApiOkResponse,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Response } from 'express';
 import { TestDto } from './dto/test.dto';
 
@@ -9,9 +14,10 @@ export class AppController {
   /**
    * Health check
    *
-   * @returns Void
+   * @remarks
+   *   This is a health check endpoint in a more detailed description
+   * @deprecated
    */
-  @ApiOperation({ summary: 'Health ' })
   @Get()
   health(@Body() body: TestDto, @Res() res: Response) {
     return res.render('index', { message: 'Hello World!' });

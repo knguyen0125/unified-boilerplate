@@ -5,6 +5,9 @@
     "apps/*",
     "migrations"
   ],
+  "scripts": {
+    "postinstall": "patch-package"
+  },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
@@ -48,6 +51,7 @@
   "dependencies": {
     "backend": "^0.0.1",
     "nestjs-zod": "^3.0.0",
+    "patch-package": "^8.0.0",
     "zod": "^3.22.4"
   }
 }

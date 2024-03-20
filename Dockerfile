@@ -12,6 +12,8 @@ COPY apps/frontend/package.json apps/frontend/package.json
 
 COPY migrations/package.json migrations/package.json
 
+COPY patches patches
+
 RUN npm install
 
 COPY . .

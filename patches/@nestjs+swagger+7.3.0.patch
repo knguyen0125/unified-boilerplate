@@ -1,0 +1,15 @@
+diff --git a/node_modules/@nestjs/swagger/dist/explorers/api-operation.explorer.js b/node_modules/@nestjs/swagger/dist/explorers/api-operation.explorer.js
+index 72bf2ef..31b818f 100644
+--- a/node_modules/@nestjs/swagger/dist/explorers/api-operation.explorer.js
++++ b/node_modules/@nestjs/swagger/dist/explorers/api-operation.explorer.js
+@@ -22,8 +22,9 @@ function applyMetadataFactory(prototype, instance) {
+         const methodKeys = Object.keys(metadata).filter((key) => typeof instance[key] === 'function');
+         methodKeys.forEach((key) => {
+             const operationMeta = {};
+-            const { summary, deprecated, tags } = metadata[key];
++            const { summary, description, deprecated, tags } = metadata[key];
+             applyIfNotNil(operationMeta, 'summary', summary);
++            applyIfNotNil(operationMeta, 'description', description);
+             applyIfNotNil(operationMeta, 'deprecated', deprecated);
+             applyIfNotNil(operationMeta, 'tags', tags);
+             if (Object.keys(operationMeta).length === 0) {
