@@ -17,7 +17,24 @@
         }
       }
     ],
-    "assets": ["views/**/*", "public/**/*", "**/*.njk"],
+    "assets": [
+      {
+        "include": "views/**/*",
+        "watchAssets": true
+      },
+      {
+        "include": "public/**/*",
+        "watchAssets": true
+      },
+      {
+        "include": "**/*.hbs",
+        "watchAssets": true
+      },
+      {
+        "include": "i18n/**/*",
+        "watchAssets": true
+      }
+    ],
     "watchAssets": true
   }
 }

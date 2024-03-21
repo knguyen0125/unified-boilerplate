@@ -14,7 +14,7 @@ We chose Joi over Zod or Class Validator because Joi itself have ability to defi
 ```ts
 import {JoiSchema} from 'nestjs-joi';
 import Joi from 'joi';
-import {BaseDto} from '@/libs/dtos/base.dto';
+import {BaseDto} from '@/libs/joi/base.dto';
 
 // BaseDto contains special directive for @nestjs/swagger
 // So that Joi validation are translated to OpenAPI automatically

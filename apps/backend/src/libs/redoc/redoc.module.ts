@@ -46,8 +46,8 @@ export class RedocModule {
       `${options.docName || 'swagger'}.json`,
     );
 
-    const redocHTML = await consolidate.nunjucks(
-      join(__dirname, 'views', 'redoc.njk'),
+    const redocHTML = await consolidate.handlebars(
+      join(__dirname, 'views', 'redoc.hbs'),
       {
         docUrl,
         ...options,

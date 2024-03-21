@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { JoiPipeModule } from 'nestjs-joi';
-import { AppController } from './app/app.controller';
 import {
   NestConfigModule,
   NestLoggerModule,
@@ -10,6 +8,8 @@ import {
   NestScheduleModule,
 } from '@/libs';
 import { UserModule } from '@/modules/user/user.module';
+import { NestJoiModule } from '@/libs/joi/joi.module';
+import { NestI18NModule } from '@/libs/i18n/i18n.module';
 
 @Module({
   imports: [
@@ -19,9 +19,9 @@ import { UserModule } from '@/modules/user/user.module';
     NestRedisModule,
     NestRabbitMQModule,
     NestScheduleModule,
-    JoiPipeModule.forRoot({}),
+    NestJoiModule,
+    NestI18NModule,
     UserModule,
   ],
-  controllers: [AppController],
 })
 export class AppModule {}

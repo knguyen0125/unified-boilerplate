@@ -1,6 +1,6 @@
 import { JoiSchema } from 'nestjs-joi';
 import Joi from 'joi';
-import { BaseDto } from '@/libs/dtos/base.dto';
+import { BaseDto } from '@/libs/joi/base.dto';
 
 export class CreateUserDto extends BaseDto {
   @JoiSchema(

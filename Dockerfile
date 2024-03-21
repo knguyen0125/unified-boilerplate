@@ -17,3 +17,5 @@ COPY patches patches
 RUN npm install
 
 COPY . .
+
+USER node

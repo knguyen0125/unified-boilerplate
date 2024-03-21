@@ -19,12 +19,12 @@ async function bootstrap() {
   app.set('trust proxy', true);
 
   // Enable Nunjucks
-  app.engine('njk', consolidate.nunjucks);
+  app.engine('hbs', consolidate.handlebars);
   app.setBaseViewsDir(path.join(__dirname, 'views'));
   app.useStaticAssets(path.join(__dirname, 'public'), {
     prefix: '/public/',
   });
-  app.setViewEngine('njk');
+  app.setViewEngine('hbs');
 
   // Enable Swagger
   const config = new DocumentBuilder()
