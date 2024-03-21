@@ -5,6 +5,9 @@
 * All translation files are located in `apps/backend/src/i18n`
 * Create a new folder for each language you want to support
 * File name are "namespaces"
+* File format is Yaml, but the extension MUST be `.yml`
+* The default language is `en`
+* The format is ICU (International Components for Unicode) MessageFormat
 
 ## Express Render (Handlebars)
 
