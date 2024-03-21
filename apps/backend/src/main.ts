@@ -1,11 +1,12 @@
 import path from 'path';
-import { NestFactory } from '@nestjs/core';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { Logger } from 'nestjs-pino';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import consolidate from 'consolidate';
 import { AppModule } from './app.module';
 import { RedocModule } from '@/libs/redoc/redoc.module';
+import { I18nJoiExceptionFilter } from '@/libs/joi/i18n-joi.exception-filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -14,6 +15,8 @@ async function bootstrap() {
   });
   const logger = app.get(Logger);
   app.useLogger(logger);
+
+  app.useGlobalFilters(new I18nJoiExceptionFilter(app.get(HttpAdapterHost)));
 
   // Trust X-Forwarded-* headers
   app.set('trust proxy', true);

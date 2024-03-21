@@ -8,6 +8,7 @@ import {
   I18nModule,
   QueryResolver,
 } from 'nestjs-i18n';
+import * as handlebars from 'handlebars';
 import { FALLBACK_LANGUAGE } from '@/libs/i18n/constants';
 
 @Module({
@@ -23,6 +24,7 @@ import { FALLBACK_LANGUAGE } from '@/libs/i18n/constants';
         watch: true,
         includeSubfolders: true,
       },
+      formatter: (template, ...args) => handlebars.compile(template)(args[0]),
       resolvers: [
         { use: QueryResolver, options: ['lang'] },
         new CookieResolver(['lang']),

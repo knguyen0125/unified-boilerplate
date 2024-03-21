@@ -12,4 +12,7 @@ export class CreateUserDto extends BaseDto {
       .example('kien.nguyen@google.com'),
   )
   email: string;
+
+  @JoiSchema(Joi.any().valid('only').only())
+  isBool: boolean;
 }
