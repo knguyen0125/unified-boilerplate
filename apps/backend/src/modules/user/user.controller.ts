@@ -1,6 +1,15 @@
-import { Body, Controller, Get, Logger, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Post,
+  Query,
+  Render,
+} from '@nestjs/common';
 import { ApiCreatedResponse } from '@nestjs/swagger';
-import { Response } from 'express';
+import { JoiPipe } from 'nestjs-joi';
+import Joi from 'joi';
 import { CreateUserDto } from '@/modules/user/dto/create-user.dto';
 
 @Controller('users')
@@ -23,7 +32,8 @@ export class UserController {
   }
 
   @Get()
-  getUsers(@Res() res: Response) {
-    return res.render('index', { n: 4 });
+  @Render('index')
+  getUsers(@Query('plu', new JoiPipe(Joi.number())) plu: number) {
+    return { n: 4, pluArgs: { x: plu } };
   }
 }

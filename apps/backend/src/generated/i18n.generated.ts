@@ -123,6 +123,7 @@ export type I18nTranslations = {
     };
     "test": {
         "HELLO": string;
+        "plu": string;
     };
     "user": {
         "email": {
