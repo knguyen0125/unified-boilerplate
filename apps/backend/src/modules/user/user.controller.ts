@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post, Res } from '@nestjs/common';
 import { ApiCreatedResponse } from '@nestjs/swagger';
-import { I18nContext } from 'nestjs-i18n';
+import { Response } from 'express';
 import { CreateUserDto } from '@/modules/user/dto/create-user.dto';
 
 @Controller('users')
@@ -23,8 +23,7 @@ export class UserController {
   }
 
   @Get()
-  getUsers() {
-    const i18n = I18nContext.current();
-    return i18n.t('test.HELLO');
+  getUsers(@Res() res: Response) {
+    return res.render('index', { n: 4 });
   }
 }

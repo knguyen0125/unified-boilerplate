@@ -8,6 +8,11 @@
   <title>Document</title>
 </head>
 <body>
-  {{ message }}
+  {{ t 'test.HELLO' }}
+{{#isnt n 5}}
+  Not 5
+{{else}}
+  Is 5
+{{/isnt}}
 </body>
 </html>

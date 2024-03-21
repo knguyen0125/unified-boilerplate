@@ -4,6 +4,8 @@ import { Logger } from 'nestjs-pino';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import consolidate from 'consolidate';
+import Handlebars from 'handlebars';
+import handlebarsHelpers from 'handlebars-helpers';
 import { AppModule } from './app.module';
 import { RedocModule } from '@/libs/redoc/redoc.module';
 import { I18nJoiExceptionFilter } from '@/libs/joi/i18n-joi.exception-filter';
@@ -28,6 +30,7 @@ async function bootstrap() {
     prefix: '/public/',
   });
   app.setViewEngine('hbs');
+  Handlebars.registerHelper(handlebarsHelpers());
 
   // Enable Swagger
   const config = new DocumentBuilder()

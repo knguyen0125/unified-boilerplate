@@ -1,14 +1,16 @@
 import path from 'path';
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import {
   AcceptLanguageResolver,
   CookieResolver,
   HeaderResolver,
   I18nJsonLoader,
   I18nModule,
+  I18nService,
   QueryResolver,
 } from 'nestjs-i18n';
 import * as handlebars from 'handlebars';
+import Handlebars from 'handlebars';
 import { FALLBACK_LANGUAGE } from '@/libs/i18n/constants';
 
 @Module({
@@ -39,4 +41,10 @@ import { FALLBACK_LANGUAGE } from '@/libs/i18n/constants';
     }),
   ],
 })
-export class NestI18NModule {}
+export class NestI18NModule implements OnModuleInit {
+  constructor(private readonly i18n: I18nService) {}
+  async onModuleInit() {
+    await this.i18n.refresh();
+    Handlebars.registerHelper('t', this.i18n.hbsHelper);
+  }
+}
