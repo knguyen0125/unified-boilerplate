@@ -1,3 +1,5 @@
+accessLog: {}
+
 tls:
   certificates:
     - certFile: "/etc/certs/cert.pem"

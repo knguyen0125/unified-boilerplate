@@ -14,9 +14,11 @@ services:
       - --entrypoints.postgres.address=:5432
       - --entrypoints.redis.address=:6379
       - --entrypoints.rabbitmq.address=:5672
+      - --entrypoints.mailpit.address=:1025
     ports:
       - '80:80'
       - '443:443'
+      - '1025:1025'
       - '5432:5432'
       - '6379:6379'
       - '5672:5672'
@@ -78,6 +80,7 @@ services:
       RABBITMQ_URL: amqp://rabbitmq:rabbitmq@rabbitmq:5672
       WORKER_MODE: 'true'
       SCHEDULER_MODE: 'true'
+      SMTP_URL: smtps://mailpit:mailpit@mailpit:1025
     volumes:
       - ./apps:/workspace/apps
     labels:
@@ -194,6 +197,23 @@ services:
       - 'traefik.http.routers.rabbitmq_management.entrypoints=websecure'
       - 'traefik.http.routers.rabbitmq_management.tls=true'
       - 'traefik.http.services.rabbitmq_management.loadbalancer.server.port=15672'
+
+  mailpit:
+    image: axllent/mailpit
+    environment:
+      MP_SMTP_AUTH: "mailpit:mailpit"
+      MP_SMTP_AUTH_ALLOW_INSECURE: "true"
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.mailpit_api.rule=Host(`mailpit.local.gd`)'
+      - 'traefik.http.routers.mailpit_api.entrypoints=websecure'
+      - 'traefik.http.routers.mailpit_api.tls=true'
+      - 'traefik.http.services.mailpit_api.loadbalancer.server.port=8025'
+      - 'traefik.tcp.routers.mailpit.rule=HostSNI(`*`)'
+      - 'traefik.tcp.routers.mailpit.entrypoints=mailpit'
+      - 'traefik.tcp.services.mailpit.loadbalancer.server.port=1025'
+    networks:
+      - nestjs-network
 
 volumes:
   postgres:

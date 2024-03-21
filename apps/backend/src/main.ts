@@ -25,8 +25,8 @@ async function bootstrap() {
 
   // Enable Nunjucks
   app.engine('hbs', consolidate.handlebars);
-  app.setBaseViewsDir(path.join(__dirname, 'views'));
-  app.useStaticAssets(path.join(__dirname, 'public'), {
+  app.setBaseViewsDir(path.join(__dirname, 'resources/views'));
+  app.useStaticAssets(path.join(__dirname, 'resources/public'), {
     prefix: '/public/',
   });
   app.setViewEngine('hbs');

@@ -1,14 +1,11 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
-import { translate } from '@/libs/i18n';
 
 @Table
 export class User extends Model {
   @Column({
     type: DataType.CHAR(255),
     validate: {
-      isEmail: {
-        msg: translate('user.email.invalid') as string,
-      },
+      isEmail: true,
     },
   })
   email: string;

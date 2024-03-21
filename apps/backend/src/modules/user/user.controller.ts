@@ -1,20 +1,16 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Logger,
-  Post,
-  Query,
-  Render,
-} from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
 import { ApiCreatedResponse } from '@nestjs/swagger';
-import { JoiPipe } from 'nestjs-joi';
-import Joi from 'joi';
+import { MailerService } from '@nestjs-modules/mailer';
+import { I18nContext, I18nService } from 'nestjs-i18n';
 import { CreateUserDto } from '@/modules/user/dto/create-user.dto';
 
 @Controller('users')
 export class UserController {
   private logger = new Logger(UserController.name);
+  constructor(
+    private readonly mailerService: MailerService,
+    private readonly i18nService: I18nService,
+  ) {}
   /**
    * Sign Up
    *
@@ -32,8 +28,31 @@ export class UserController {
   }
 
   @Get()
-  @Render('index')
-  getUsers(@Query('plu', new JoiPipe(Joi.number())) plu: number) {
-    return { n: 4, pluArgs: { x: plu } };
+  async getUsers() {
+    console.log(I18nContext.current().lang);
+    const data = await this.mailerService.sendMail({
+      to: 'kien.nguyen@your.rentals',
+      from: 'noreply@nestjs.com',
+      subject: 'Testing Nest MailerModule',
+      template: 'welcome',
+      context: {
+        code: '123456',
+        // !Important - Mailer hbs do NOT know to grab the lang from I18nContext
+        i18nLang: I18nContext.current().lang,
+      },
+    });
+
+    this.i18nService.t('user.email.invalid', {
+      lang: I18nContext.current().lang,
+      args: {},
+    });
+
+    return {
+      ...data,
+      lang: I18nContext.current().lang,
+      f: this.i18nService.t('user.email.invalid', {
+        lang: I18nContext.current().lang,
+      }),
+    };
   }
 }

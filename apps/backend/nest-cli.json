@@ -19,11 +19,7 @@
     ],
     "assets": [
       {
-        "include": "views/**/*",
-        "watchAssets": true
-      },
-      {
-        "include": "public/**/*",
+        "include": "resources/**/*",
         "watchAssets": true
       },
       {

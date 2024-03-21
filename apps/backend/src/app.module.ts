@@ -10,6 +10,7 @@ import {
 import { UserModule } from '@/modules/user/user.module';
 import { NestJoiModule } from '@/libs/joi/joi.module';
 import { NestI18NModule } from '@/libs/i18n/i18n.module';
+import { NestMailerModule } from '@/libs/mailer/mailer.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { NestI18NModule } from '@/libs/i18n/i18n.module';
     NestScheduleModule,
     NestJoiModule,
     NestI18NModule,
+    NestMailerModule,
     UserModule,
   ],
 })
