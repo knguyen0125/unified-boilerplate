@@ -80,12 +80,12 @@ services:
       RABBITMQ_URL: amqp://rabbitmq:rabbitmq@rabbitmq:5672
       WORKER_MODE: 'true'
       SCHEDULER_MODE: 'true'
-      SMTP_URL: smtps://mailpit:mailpit@mailpit:1025
+      SMTP_URL: smtp://mailpit:mailpit@mailpit:1025
     volumes:
       - ./apps:/workspace/apps
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.backend.rule=Host(`backend.local.gd`)'
+      - 'traefik.http.routers.backend.rule=Host(`backend.local.gd`) || Host(`auth.local.gd`)'
       - 'traefik.http.routers.backend.entrypoints=websecure'
       - 'traefik.http.routers.backend.tls=true'
       - 'traefik.http.services.backend.loadbalancer.server.port=8080'
