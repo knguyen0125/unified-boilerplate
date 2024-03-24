@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { DynamicModule, Global, Module } from '@nestjs/common';
-// import Redis from 'ioredis';
-// import { Sequelize } from 'sequelize-typescript';
-//
-// import { getConnectionToken } from '@nestjs/sequelize';
-// import { getRedisConnectionToken } from '@nestjs-modules/ioredis';
-// import { CachedDatabaseAdapter } from './cached-database.adapter';
-// import { oidcModelMap } from '@/modules/auth/oidc-provider/models';
+import { CachedDatabaseAdapter } from '@/modules/auth/oidc-provider/cached-database.adapter';
+import { oidcModelMap } from '@/modules/auth/oidc-provider/models';
+import { OidcController } from '@/modules/auth/oidc-provider/oidc.controller';
+import { OidcInteractionController } from '@/modules/auth/oidc-provider/oidc-interaction.controller';
 
 export type OidcProviderModuleOptions = {
   // Add your options here
@@ -18,33 +15,46 @@ export type OidcProviderModuleOptions = {
 })
 export class OidcProviderModule {
   static async forRoot(): Promise<DynamicModule> {
-    // const importOidcProvider = eval(`import('oidc-provider')`) as Promise<
-    //   typeof import('oidc-provider')
-    // >;
-    console.log('hi');
-
     return {
       module: OidcProviderModule,
+      controllers: [OidcController, OidcInteractionController],
       providers: [
         {
-          provide: 'NESTJS_OIDC_PROVIDER',
+          provide: 'OIDC_PROVIDER',
           // inject: [getRedisConnectionToken(), getConnectionToken()],
           useFactory: async () => {
             const Provider = (await import('oidc-provider')).default; // Get around the CJS / ESM
 
-            console.log('hi mom');
-
             return new Provider('https://auth.local.gd', {
-              // adapter: (name) =>
-              //   new CachedDatabaseAdapter(redis, oidcModelMap[name]),
+              adapter: (name) => new CachedDatabaseAdapter(oidcModelMap[name]),
               clients: [
                 {
                   client_id: 'foo',
                   client_secret: 'bar',
-                  application_type: 'web',
                   grant_types: ['authorization_code'],
+                  redirect_uris: ['https://oauth.pstmn.io/v1/callback'],
                 },
               ],
+              findAccount: async (ctx, id) => {
+                return {
+                  accountId: id,
+                  async claims() {
+                    return {
+                      sub: id,
+                    };
+                  },
+                };
+              },
+              features: {
+                clientCredentials: { enabled: true },
+                introspection: { enabled: true },
+                devInteractions: { enabled: false },
+              },
+              interactions: {
+                url(ctx, interaction) {
+                  return `/oidc-interactions/${interaction.uid}`;
+                },
+              },
             });
           },
         },

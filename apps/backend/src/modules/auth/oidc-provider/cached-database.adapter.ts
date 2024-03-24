@@ -2,6 +2,7 @@
 import { Adapter, AdapterPayload } from 'oidc-provider';
 import Redis from 'ioredis';
 import { Model, Sequelize } from 'sequelize-typescript';
+import { OidcBaseModel } from '@/modules/auth/oidc-provider/models/oidc.base-entity';
 
 const grantable = new Set([
   'AccessToken',
@@ -41,34 +42,85 @@ const models = [
  * This adapter is used to provide a write-through
  */
 export class CachedDatabaseAdapter implements Adapter {
-  constructor(
-    private readonly cache: Redis,
-    private readonly model: typeof Model,
-  ) {}
+  constructor(private readonly model: typeof OidcBaseModel) {}
 
-  upsert(
+  async upsert(
     id: string,
-    payload: AdapterPayload,
+    data: AdapterPayload,
     expiresIn: number,
   ): Promise<void> {
-    throw new Error('Method not implemented.');
+    await this.model.upsert({
+      id,
+      data,
+      ...(data.grantId ? { grantId: data.grantId } : undefined),
+      ...(data.userCode ? { userCode: data.userCode } : undefined),
+      ...(data.uid ? { uid: data.uid } : undefined),
+      ...(expiresIn
+        ? { expiresAt: new Date(Date.now() + expiresIn * 1000) }
+        : undefined),
+    });
   }
-  find(id: string): Promise<void | AdapterPayload> {
-    throw new Error('Method not implemented.');
+
+  async find(id: string): Promise<void | AdapterPayload> {
+    const found = await this.model.findOne({ where: { id } });
+
+    if (!found) {
+      return undefined;
+    }
+
+    return {
+      ...found.data,
+      ...(found.consumedAt
+        ? {
+            consumed: true,
+          }
+        : undefined),
+    };
   }
-  findByUserCode(userCode: string): Promise<void | AdapterPayload> {
-    throw new Error('Method not implemented.');
+
+  async findByUserCode(userCode: string): Promise<void | AdapterPayload> {
+    const found = await this.model.findOne({ where: { userCode } });
+
+    if (!found) {
+      return undefined;
+    }
+
+    return {
+      ...found.data,
+      ...(found.consumedAt
+        ? {
+            consumed: true,
+          }
+        : undefined),
+    };
   }
-  findByUid(uid: string): Promise<void | AdapterPayload> {
-    throw new Error('Method not implemented.');
+
+  async findByUid(uid: string): Promise<void | AdapterPayload> {
+    const found = await this.model.findOne({ where: { uid } });
+
+    if (!found) {
+      return undefined;
+    }
+
+    return {
+      ...found.data,
+      ...(found.consumedAt
+        ? {
+            consumed: true,
+          }
+        : undefined),
+    };
   }
-  consume(id: string): Promise<void> {
-    throw new Error('Method not implemented.');
+
+  async consume(id: string): Promise<void> {
+    await this.model.update({ consumedAt: new Date() }, { where: { id } });
   }
-  destroy(id: string): Promise<void> {
-    throw new Error('Method not implemented.');
+
+  async destroy(id: string): Promise<void> {
+    await this.model.destroy({ where: { id } });
   }
-  revokeByGrantId(grantId: string): Promise<void> {
-    throw new Error('Method not implemented.');
+
+  async revokeByGrantId(grantId: string): Promise<void> {
+    await this.model.destroy({ where: { grantId } });
   }
 }
