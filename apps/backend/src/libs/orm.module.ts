@@ -1,3 +1,4 @@
+import path from 'path';
 import { Global, Logger, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -13,6 +14,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
         return {
           ...configService.get('database'),
           logging: sequelizeLogger.log.bind(sequelizeLogger),
+          models: [path.join(__dirname, '..') + '/**/*.entity.{ts,js}'],
         };
       },
     }),

@@ -78,9 +78,9 @@ services:
       DATABASE_URL: postgres://postgres:postgres@postgres:5432/nestjs
       REDIS_URL: redis://default:redis@redis:6379
       RABBITMQ_URL: amqp://rabbitmq:rabbitmq@rabbitmq:5672
+      SMTP_URL: smtp://mailpit:mailpit@mailpit:1025
       WORKER_MODE: 'true'
       SCHEDULER_MODE: 'true'
-      SMTP_URL: smtp://mailpit:mailpit@mailpit:1025
     volumes:
       - ./apps:/workspace/apps
     labels:
@@ -199,7 +199,7 @@ services:
       - 'traefik.http.services.rabbitmq_management.loadbalancer.server.port=15672'
 
   mailpit:
-    image: axllent/mailpit
+    image: axllent/mailpit:v1.15
     environment:
       MP_SMTP_AUTH: "mailpit:mailpit"
       MP_SMTP_AUTH_ALLOW_INSECURE: "true"
