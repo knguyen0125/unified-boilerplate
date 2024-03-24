@@ -3,6 +3,6 @@ import { OidcProviderModule } from '@/modules/auth/oidc-provider/oidc-provider.m
 
 @Global()
 @Module({
-  imports: [OidcProviderModule],
+  imports: [OidcProviderModule.forRoot()],
 })
 export class AuthModule {}

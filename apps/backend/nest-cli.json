@@ -3,21 +3,12 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "builder": "swc",
-    "swcrcPath": ".swcrc",
+    "builder": {
+      "type": "swc"
+    },
     "typeCheck": true,
     "deleteOutDir": true,
-    "plugins": [
-      {
-        "name": "@nestjs/swagger",
-        "options": {
-          "dtoFileNameSuffix": [],
-          "classValidatorShim": false,
-          "introspectComments": true,
-          "controllerKeyOfComment": "summary"
-        }
-      }
-    ],
+    "plugins": [],
     "assets": [
       {
         "include": "resources/**/*",

@@ -1,5 +1,14 @@
 FROM public.ecr.aws/docker/library/node:20.11
 
+# Install development tools
+RUN apt update && apt install -y \
+    curl \
+    git \
+    jq \
+    unzip \
+    zip \
+    vim
+
 WORKDIR /workspace
 
 COPY package.json .

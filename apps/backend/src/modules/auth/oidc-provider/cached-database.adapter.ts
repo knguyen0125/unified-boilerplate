@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Adapter, AdapterPayload } from 'oidc-provider';
 import Redis from 'ioredis';
-import { Sequelize } from 'sequelize-typescript';
+import { Model, Sequelize } from 'sequelize-typescript';
 
 const grantable = new Set([
   'AccessToken',
@@ -42,9 +42,8 @@ const models = [
  */
 export class CachedDatabaseAdapter implements Adapter {
   constructor(
-    private readonly name: string,
     private readonly cache: Redis,
-    private readonly sequelize: Sequelize,
+    private readonly model: typeof Model,
   ) {}
 
   upsert(
