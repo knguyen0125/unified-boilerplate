@@ -1,8 +1,8 @@
 import { Global, Module } from '@nestjs/common';
-import { OidcProviderModule } from '@/modules/auth/oidc-provider/oidc-provider.module';
+import { OidcModule } from '@/modules/auth/oidc/oidc.module';
 
 @Global()
 @Module({
-  imports: [OidcProviderModule.forRoot()],
+  imports: [OidcModule.forRoot()],
 })
 export class AuthModule {}

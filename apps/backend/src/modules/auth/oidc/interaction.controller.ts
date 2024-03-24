@@ -3,7 +3,7 @@ import type Provider from 'oidc-provider';
 import { Request, Response } from 'express';
 
 @Controller('/oidc-interactions')
-export class OidcInteractionController {
+export class InteractionController {
   constructor(
     @Inject('OIDC_PROVIDER')
     private readonly oidcProvider: Provider,

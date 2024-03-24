@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Adapter, AdapterPayload } from 'oidc-provider';
-import Redis from 'ioredis';
-import { Model, Sequelize } from 'sequelize-typescript';
-import { OidcBaseModel } from '@/modules/auth/oidc-provider/models/oidc.base-entity';
+import { OidcBaseModel } from '../models/oidc.base-entity';
 
 const grantable = new Set([
   'AccessToken',
@@ -41,7 +39,7 @@ const models = [
  *
  * This adapter is used to provide a write-through
  */
-export class CachedDatabaseAdapter implements Adapter {
+export class DatabaseAdapter implements Adapter {
   constructor(private readonly model: typeof OidcBaseModel) {}
 
   async upsert(

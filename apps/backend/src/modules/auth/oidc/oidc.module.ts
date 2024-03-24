@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { DynamicModule, Global, Module } from '@nestjs/common';
-import { CachedDatabaseAdapter } from '@/modules/auth/oidc-provider/cached-database.adapter';
-import { oidcModelMap } from '@/modules/auth/oidc-provider/models';
-import { OidcController } from '@/modules/auth/oidc-provider/oidc.controller';
-import { OidcInteractionController } from '@/modules/auth/oidc-provider/oidc-interaction.controller';
+import { DatabaseAdapter } from './adapters/database.adapter';
+import { oidcModelMap } from './models';
+import { OidcController } from './oidc.controller';
+import { InteractionController } from './interaction.controller';
 
 export type OidcProviderModuleOptions = {
   // Add your options here
@@ -13,20 +13,19 @@ export type OidcProviderModuleOptions = {
 @Module({
   imports: [],
 })
-export class OidcProviderModule {
+export class OidcModule {
   static async forRoot(): Promise<DynamicModule> {
     return {
-      module: OidcProviderModule,
-      controllers: [OidcController, OidcInteractionController],
+      module: OidcModule,
+      controllers: [OidcController, InteractionController],
       providers: [
         {
           provide: 'OIDC_PROVIDER',
-          // inject: [getRedisConnectionToken(), getConnectionToken()],
           useFactory: async () => {
             const Provider = (await import('oidc-provider')).default; // Get around the CJS / ESM
 
             return new Provider('https://auth.local.gd', {
-              adapter: (name) => new CachedDatabaseAdapter(oidcModelMap[name]),
+              adapter: (name) => new DatabaseAdapter(oidcModelMap[name]),
               clients: [
                 {
                   client_id: 'foo',

@@ -3,6 +3,7 @@ import { Op } from 'sequelize';
 
 @DefaultScope(() => ({
   where: {
+    // Don't return expired items
     expiresAt: {
       [Op.gt]: new Date().toISOString(),
     },
