@@ -11,6 +11,7 @@ import { UserModule } from '@/modules/user/user.module';
 import { NestJoiModule } from '@/libs/joi/joi.module';
 import { NestI18NModule } from '@/libs/i18n/i18n.module';
 import { NestMailerModule } from '@/libs/mailer/mailer.module';
+import { AuthModule } from '@/modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { NestMailerModule } from '@/libs/mailer/mailer.module';
     NestJoiModule,
     NestI18NModule,
     NestMailerModule,
+    AuthModule,
     UserModule,
   ],
 })

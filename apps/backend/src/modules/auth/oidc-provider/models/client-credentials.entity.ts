@@ -2,4 +2,4 @@ import { Table } from 'sequelize-typescript';
 import { OidcBaseModel } from '@/modules/auth/oidc-provider/models/oidc.base-entity';
 
 @Table
-export class ClientCredentials extends OidcBaseModel {}
+export default class ClientCredentials extends OidcBaseModel {}

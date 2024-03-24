@@ -4,6 +4,7 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "builder": "swc",
+    "swcrcPath": ".swcrc",
     "typeCheck": true,
     "deleteOutDir": true,
     "plugins": [

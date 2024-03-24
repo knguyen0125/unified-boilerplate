@@ -15,6 +15,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
           ...configService.get('database'),
           logging: sequelizeLogger.log.bind(sequelizeLogger),
           models: [path.join(__dirname, '..') + '/**/*.entity.{ts,js}'],
+          synchronize: true,
         };
       },
     }),

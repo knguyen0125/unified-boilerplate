@@ -1,7 +1,7 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
 @Table
-export class User extends Model {
+export default class User extends Model {
   @Column({
     type: DataType.CHAR(255),
     validate: {
