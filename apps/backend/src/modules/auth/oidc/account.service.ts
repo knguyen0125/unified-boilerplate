@@ -5,12 +5,19 @@ import type { Configuration } from 'oidc-provider';
 @Injectable()
 export class AccountService {
   findAccount: Configuration['findAccount'] = (ctx, id, token) => {
+    let sub = id;
+    if (token && token.kind === 'AccessToken') {
+      if (token.extra && token.extra['act_as']) {
+        sub = token.extra['act_as'] as string;
+      }
+    }
+
     return {
-      accountId: id,
+      accountId: sub,
       async claims(use, scope) {
         // These claims are for `use` of `id_token` or `userinfo`
         return {
-          sub: id,
+          sub,
         };
       },
     };
