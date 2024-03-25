@@ -13,7 +13,8 @@ import { SequelizeModule } from '@nestjs/sequelize';
         const sequelizeLogger = new Logger('Sequelize');
         return {
           ...configService.get('database'),
-          logging: sequelizeLogger.log.bind(sequelizeLogger),
+          logging: sequelizeLogger.debug.bind(sequelizeLogger),
+          autoLoadModels: true,
           models: [path.join(__dirname, '..') + '/**/*.entity.{ts,js}'],
           synchronize: true,
           sync: {
