@@ -22,6 +22,7 @@ export class AccountService {
       },
     };
   };
+
   extraTokenClaims: Configuration['extraTokenClaims'] = async (ctx, token) => {
     // Support for impersonation
     if (token.kind === 'AccessToken') {
