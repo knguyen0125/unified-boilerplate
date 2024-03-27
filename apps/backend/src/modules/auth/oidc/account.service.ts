@@ -1,10 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { Injectable } from '@nestjs/common';
 import type { Configuration } from 'oidc-provider';
+import { InjectModel } from '@nestjs/sequelize';
+import User from '@/modules/user/models/user.entity';
 
 @Injectable()
 export class AccountService {
-  findAccount: Configuration['findAccount'] = (ctx, id, token) => {
+  constructor(
+    @InjectModel(User)
+    private readonly users: typeof User,
+  ) {}
+  findAccount: Configuration['findAccount'] = async (ctx, id, token) => {
     let sub = id;
     if (token && token.kind === 'AccessToken') {
       if (token.extra && token.extra['act_as']) {
@@ -12,13 +18,25 @@ export class AccountService {
       }
     }
 
+    const user = await this.users.findOne({ where: { id: sub } });
+
+    console.log(user);
+
     return {
-      accountId: sub,
+      accountId: user.id,
       async claims(use, scope) {
-        // These claims are for `use` of `id_token` or `userinfo`
-        return {
+        const c = {
           sub,
+          given_name: user.firstName,
+          family_name: user.lastName,
+          email: user.email,
+          email_verified: user.emailVerified,
+          hi: 'there',
         };
+
+        console.log(c);
+        // These claims are for `use` of `id_token` or `userinfo`
+        return c;
       },
     };
   };

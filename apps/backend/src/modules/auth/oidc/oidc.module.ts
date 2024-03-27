@@ -47,6 +47,11 @@ export class OidcModule {
               extraTokenClaims:
                 accountService.extraTokenClaims.bind(accountService),
               claims: {
+                acr: null,
+                auth_time: null,
+                iss: null,
+                openid: ['sub'],
+                sid: null,
                 address: ['address'],
                 email: ['email', 'email_verified'],
                 phone: ['phone_number', 'phone_number_verified'],

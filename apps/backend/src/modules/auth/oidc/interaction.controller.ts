@@ -1,5 +1,4 @@
-import path from 'path';
-import { Controller, Get, Inject, Param, Post, Req, Res } from '@nestjs/common';
+import { Controller, Get, Inject, Param, Req, Res } from '@nestjs/common';
 import type Provider from 'oidc-provider';
 import { Request, Response } from 'express';
 
@@ -13,34 +12,6 @@ export class InteractionController {
     private readonly oidcProvider: Provider,
   ) {}
 
-  @Post('/:uid/login')
-  async login(
-    @Param('uid') uid: string,
-    @Req() request: Request,
-    @Res({ passthrough: true }) response: Response,
-  ) {
-    if (request.body.username === 'kien' && request.body.password === '123') {
-      return this.oidcProvider.interactionFinished(
-        request,
-        response,
-        {
-          login: { accountId: 'kien' },
-        },
-        { mergeWithLastSubmission: false },
-      );
-    }
-
-    return this.oidcProvider.interactionFinished(
-      request,
-      response,
-      {
-        error: 'access_denied',
-        error_description: 'Invalid credentials',
-      },
-      { mergeWithLastSubmission: false },
-    );
-  }
-
   @Get('/:uid')
   async interaction(
     @Param('uid') uid: string,
@@ -53,14 +24,24 @@ export class InteractionController {
     );
 
     if (details.prompt.name === 'login') {
-      // Check (using session) if user is logged in
-
       // If user is logged in, set the interaction as finished
+      if (request.isAuthenticated()) {
+        return this.oidcProvider.interactionFinished(
+          request,
+          response,
+          {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            login: { accountId: request.user.id },
+          },
+          { mergeWithLastSubmission: false },
+        );
+      }
 
       // Otherwise, redirect to login page (with redirection back to here)
-      return response.render(path.join(__dirname, 'views/login.hbs'), {
-        action: `/oidc-interactions/${uid}/login`,
-      });
+      return response.redirect(
+        `/login?returnTo=${encodeURIComponent(request.url)}`,
+      );
     } else if (details.prompt.name === 'consent') {
       const grant = details.grantId
         ? await this.oidcProvider.Grant.find(details.grantId)
