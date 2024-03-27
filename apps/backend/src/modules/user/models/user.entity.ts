@@ -1,5 +1,5 @@
 import { Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
-import WebIdentity from '@/entities/web-identity.entity';
+import WebIdentity from '@/modules/user/models/web-identity.entity';
 
 @Table
 export default class User extends Model<User> {

@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, Profile } from 'passport-google-oauth20';
 import { InjectModel } from '@nestjs/sequelize';
-import WebIdentity from '@/entities/web-identity.entity';
-import User from '@/entities/user.entity';
+import WebIdentity from '@/modules/user/models/web-identity.entity';
+import User from '@/modules/user/models/user.entity';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {

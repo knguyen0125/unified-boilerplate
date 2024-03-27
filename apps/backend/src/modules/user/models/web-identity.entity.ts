@@ -6,7 +6,7 @@ import {
   Model,
   Table,
 } from 'sequelize-typescript';
-import User from '@/entities/user.entity';
+import User from '@/modules/user/models/user.entity';
 
 @Table
 export default class WebIdentity extends Model<WebIdentity> {
