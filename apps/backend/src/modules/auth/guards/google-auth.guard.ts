@@ -13,4 +13,14 @@ export class GoogleAuthGuard extends AuthGuard('google') {
 
     return true;
   }
+
+  handleRequest<TUser = any>(
+    err: any,
+    user: any,
+    info: any,
+    context: ExecutionContext,
+    status?: any,
+  ): TUser {
+    return super.handleRequest(err, user, info, context, status);
+  }
 }

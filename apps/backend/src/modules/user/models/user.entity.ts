@@ -39,6 +39,12 @@ export default class User extends Model<User> {
   })
   password: string;
 
+  @Column({
+    type: DataType.BOOLEAN,
+    defaultValue: false,
+  })
+  requirePasswordChange: boolean;
+
   @HasMany(() => WebIdentity, {
     as: {
       singular: 'WebIdentity',

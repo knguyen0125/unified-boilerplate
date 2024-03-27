@@ -81,6 +81,7 @@ services:
       SMTP_URL: smtp://mailpit:mailpit@mailpit:1025
       WORKER_MODE: 'true'
       SCHEDULER_MODE: 'true'
+      AUTH_BASE_URL: 'auth.local.gd'
     env_file:
       - path: './.env'
         required: true

@@ -46,6 +46,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
         // This field is actually a boolean, but the type definition is incorrect
         emailVerified: profile.emails[0].verified as any as boolean,
         password: crypto.randomBytes(20).toString('hex'),
+        requirePasswordChange: true,
       });
 
       // Create the web identity

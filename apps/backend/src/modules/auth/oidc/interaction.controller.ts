@@ -3,7 +3,10 @@ import { Controller, Get, Inject, Param, Post, Req, Res } from '@nestjs/common';
 import type Provider from 'oidc-provider';
 import { Request, Response } from 'express';
 
-@Controller('/oidc-interactions')
+@Controller({
+  host: process.env.AUTH_BASE_URL,
+  path: '/oidc-interactions',
+})
 export class InteractionController {
   constructor(
     @Inject('OIDC_PROVIDER')

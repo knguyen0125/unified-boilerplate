@@ -14,7 +14,7 @@ import { Request, Response } from 'express';
 import { ModuleRef } from '@nestjs/core';
 import { PATH_METADATA, VERSION_METADATA } from '@nestjs/common/constants';
 
-@Controller('/oidc')
+@Controller({ host: process.env.AUTH_BASE_URL, path: '/oidc' })
 export class OidcController {
   private oidcCallback: any;
 
