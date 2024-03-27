@@ -11,6 +11,10 @@ export type OidcProviderModuleOptions = {
   // Add your options here
 };
 
+const dynamicImport = async (module: string) => {
+  return await eval(`import('${module}')`);
+};
+
 @Global()
 @Module({
   imports: [SequelizeModule.forFeature(models)],
@@ -27,7 +31,7 @@ export class OidcModule {
           provide: 'OIDC_PROVIDER',
           inject: [AccountService],
           useFactory: async (accountService: AccountService) => {
-            const Provider = (await import('oidc-provider')).default; // Get around the CJS / ESM
+            const Provider = (await dynamicImport('oidc-provider')).default;
 
             const provider = new Provider('https://auth.local.gd', {
               adapter: (name) => new DatabaseAdapter(oidcModelMap[name]),

@@ -70,7 +70,6 @@ async function bootstrap() {
     .setDescription('Backend')
     .setVersion('1.0')
     .build();
-
   // await SwaggerModule.loadPluginMetadata(metadata);
   const document = SwaggerModule.createDocument(app, config);
   // SwaggerModule.setup('docs', app, document);
