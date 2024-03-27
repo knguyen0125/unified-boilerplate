@@ -81,6 +81,9 @@ services:
       SMTP_URL: smtp://mailpit:mailpit@mailpit:1025
       WORKER_MODE: 'true'
       SCHEDULER_MODE: 'true'
+    env_file:
+      - path: './.env'
+        required: true
     volumes:
       - ./apps:/workspace/apps
     labels:

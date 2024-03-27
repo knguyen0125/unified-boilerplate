@@ -18,17 +18,14 @@ export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
   }
 
   async validate(email: string, password: string) {
-    console.log('local', email, password);
     const user = await this.users.findOne({ where: { email } });
 
     // Vulnerability: User enumeration
-    console.log(user);
     if (!user) {
       return null;
     }
 
     if (user.validatePassword(password)) {
-      console.log('local', user);
       return user;
     }
 

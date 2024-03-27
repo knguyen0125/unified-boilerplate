@@ -1,6 +1,6 @@
 import path from 'path';
-import { Controller, Get, Post, Render, Req, UseGuards } from '@nestjs/common';
-import { Request } from 'express';
+import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Request, Response } from 'express';
 import { LocalAuthGuard } from '@/modules/auth/guards/local-auth.guard';
 import { AuthenticatedGuard } from '@/modules/auth/guards/authenticated.guard';
 import { GoogleAuthGuard } from '@/modules/auth/guards/google-auth.guard';
@@ -8,33 +8,35 @@ import { GoogleAuthGuard } from '@/modules/auth/guards/google-auth.guard';
 @Controller('/')
 export class AuthController {
   @Get('/login')
-  @Render(path.join(__dirname, 'views/login'))
-  login() {
-    return {};
+  login(@Req() req: Request, @Res() res: Response) {
+    if (req.isAuthenticated()) {
+      return res.redirect('/profile');
+    }
+
+    return res.render(path.resolve(__dirname, 'views/login.hbs'));
   }
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
-  loginWithCredentials() {
-    return 'Logged in!';
+  loginWithCredentials(@Res() res: Response) {
+    return res.redirect('/profile');
   }
 
   @UseGuards(GoogleAuthGuard)
   @Get('/auth/google')
   loginWithGoogle() {
-    return 'Logging in with Google';
+    // This is intentionally empty. The Google strategy will handle the redirect.
   }
 
   @UseGuards(GoogleAuthGuard)
   @Get('/auth/google/callback')
-  loginWithGoogleCallback() {
-    return 'Logged in with Google!';
+  loginWithGoogleCallback(@Res() res: Response) {
+    return res.redirect('/profile');
   }
 
   @UseGuards(AuthenticatedGuard)
   @Get('/profile')
   getProfile(@Req() req: Request) {
-    console.log(req.user);
     return req.user;
   }
 }

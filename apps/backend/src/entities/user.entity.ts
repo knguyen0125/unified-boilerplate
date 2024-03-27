@@ -56,7 +56,6 @@ export default class User extends Model<User> {
   }
 
   validatePassword(plaintext: string) {
-    console.log(this.password, plaintext, this.password === plaintext);
     // TODO: Implement a secure password validation
     return this.password === plaintext;
   }

@@ -26,7 +26,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   }
 
   async validate(accessToken: string, refreshToken: string, profile: Profile) {
-    console.log(profile);
     // Check if federated identity exists in database using profile.id <- This should not change
     const webIdentity = await this.webIdentities.findOne({
       where: {

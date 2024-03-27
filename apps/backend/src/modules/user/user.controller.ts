@@ -29,7 +29,6 @@ export class UserController {
 
   @Get()
   async getUsers() {
-    console.log(I18nContext.current().lang);
     const data = await this.mailerService.sendMail({
       to: 'kien.nguyen@your.rentals',
       from: 'noreply@nestjs.com',
