@@ -32,8 +32,6 @@ export const database = registerAs('database', () => ({
       database: process.env.DATABASE_NAME,
     },
   },
-  autoLoadModels: true,
-  synchronize: false,
   define: {
     underscored: true,
   },

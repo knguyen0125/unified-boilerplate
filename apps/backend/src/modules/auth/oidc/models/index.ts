@@ -30,6 +30,23 @@ export const oidcModelMap = {
   BackchannelAuthenticationRequest: BackchannelAuthenticationRequest,
 };
 
+export const models = [
+  Session,
+  AccessToken,
+  AuthorizationCode,
+  RefreshToken,
+  DeviceCode,
+  ClientCredentials,
+  Client,
+  InitialAccessToken,
+  RegistrationAccessToken,
+  Interaction,
+  ReplayDetection,
+  PushAuthorizationRequest,
+  Grant,
+  BackchannelAuthenticationRequest,
+];
+
 export {
   Session,
   AccessToken,

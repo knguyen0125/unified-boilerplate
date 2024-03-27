@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { DynamicModule, Global, Module } from '@nestjs/common';
+import { SequelizeModule } from '@nestjs/sequelize';
 import { DatabaseAdapter } from './adapters/database.adapter';
-import { oidcModelMap } from './models';
+import { models, oidcModelMap } from './models';
 import { OidcController } from './oidc.controller';
 import { InteractionController } from './interaction.controller';
 import { AccountService } from './account.service';
@@ -12,7 +13,8 @@ export type OidcProviderModuleOptions = {
 
 @Global()
 @Module({
-  imports: [],
+  imports: [SequelizeModule.forFeature(models)],
+  exports: [SequelizeModule],
 })
 export class OidcModule {
   static async forRoot(): Promise<DynamicModule> {

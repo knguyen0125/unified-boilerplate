@@ -24,8 +24,8 @@ import { AuthModule } from '@/modules/auth/auth.module';
     NestJoiModule,
     NestI18NModule,
     NestMailerModule,
-    AuthModule,
     UserModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

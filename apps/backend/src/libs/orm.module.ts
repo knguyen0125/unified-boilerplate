@@ -1,5 +1,4 @@
-import path from 'path';
-import { Global, Logger, Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 
@@ -10,12 +9,12 @@ import { SequelizeModule } from '@nestjs/sequelize';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
-        const sequelizeLogger = new Logger('Sequelize');
+        // Using sequelize logger causes circular dependency issue :/
+        // const sequelizeLogger = new Logger('Sequelize');
         return {
           ...configService.get('database'),
-          logging: sequelizeLogger.debug.bind(sequelizeLogger),
+          // logging: sequelizeLogger.log.bind(sequelizeLogger),
           autoLoadModels: true,
-          models: [path.join(__dirname, '..') + '/**/*.entity.{ts,js}'],
           synchronize: true,
           sync: {
             // force: true,
