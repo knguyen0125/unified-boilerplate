@@ -1,5 +1,13 @@
 import path from 'path';
-import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Query,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { Request, Response } from 'express';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LocalAuthGuard } from '@/modules/auth/guards/local-auth.guard';
@@ -14,12 +22,22 @@ export class AuthController {
     description: 'Render the login page',
   })
   @Get('/login')
-  login(@Req() req: Request, @Res() res: Response) {
+  login(
+    @Query('returnTo') returnTo: string,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
     if (req.isAuthenticated()) {
+      if (returnTo) {
+        return res.redirect(returnTo);
+      }
+
       return res.redirect('/profile');
     }
 
-    return res.render(path.resolve(__dirname, 'views/login.hbs'));
+    return res.render(path.resolve(__dirname, 'views/login.hbs'), {
+      returnTo,
+    });
   }
 
   @UseGuards(LocalAuthGuard)
