@@ -269,10 +269,10 @@ services:
       SECRETS_DEFAULT: 'defaultsecretdefaultsecretdefaul'
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.keycloak.rule=Host(`auth.local.gd`)'
-      - 'traefik.http.routers.keycloak.entrypoints=websecure'
-      - 'traefik.http.routers.keycloak.tls=true'
-      - 'traefik.http.services.keycloak.loadbalancer.server.port=4433'
+      - 'traefik.http.routers.kratos.rule=Host(`auth.local.gd`)'
+      - 'traefik.http.routers.kratos.entrypoints=websecure'
+      - 'traefik.http.routers.kratos.tls=true'
+      - 'traefik.http.services.kratos.loadbalancer.server.port=4433'
     depends_on:
       kratos-migrate:
         condition: service_completed_successfully
