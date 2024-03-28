@@ -143,7 +143,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: nestjs
-      POSTGRES_MULTIPLE_DATABASES: 'keycloak'
+      POSTGRES_MULTIPLE_DATABASES: 'keycloak,kratos,hydra'
     volumes:
       - postgres:/var/lib/postgresql/data
       - ./infrastructure/postgres/init-scripts:/docker-entrypoint-initdb.d
@@ -239,16 +239,41 @@ services:
       KC_DB_USERNAME: postgres
       KC_DB_PASSWORD: postgres
       KC_HTTP_ENABLED: 'true'
-    labels:
-      - 'traefik.enable=true'
-      - 'traefik.http.routers.keycloak.rule=Host(`auth.local.gd`) || Host(`auth-admin.local.gd`)'
-      - 'traefik.http.routers.keycloak.entrypoints=websecure'
-      - 'traefik.http.routers.keycloak.tls=true'
-      - 'traefik.http.services.keycloak.loadbalancer.server.port=8080'
+#    labels:
+#      - 'traefik.enable=true'
+#      - 'traefik.http.routers.keycloak.rule=Host(`auth.local.gd`) || Host(`auth-admin.local.gd`)'
+#      - 'traefik.http.routers.keycloak.entrypoints=websecure'
+#      - 'traefik.http.routers.keycloak.tls=true'
+#      - 'traefik.http.services.keycloak.loadbalancer.server.port=8080'
     volumes:
       - ./infrastructure/keycloak/themes/mytheme:/opt/keycloak/themes/mytheme
     networks:
       - nestjs-network
+
+  kratos:
+    image: oryd/kratos:v1.1.0
+    command:
+      - serve
+      - --config /app/config.yml
+    volumes:
+      - ./infrastructure/kratos:/app
+    environment:
+      DSN:
+      COURIER_SMTP_CONNECTION_URI: smtp://mailpit:mailpit@mailpit:1025
+      COURIER_SMTP_FROM_ADDRESS: admin@unified-boilerplate.com
+      COURIER_SMTP_FROM_NAME: Admin
+      COURIER_SMS_FROM: +1234567890
+      SELFSERVICE_METHODS_TOTP_CONFIG_ISSUER: unified-boilerplate
+      SECRETS_COOKIE: 'cookiesecret'
+      SECRETS_CIPHER: 'ciphersecret'
+      SECRETS_DEFAULT: 'defaultsecret'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.keycloak.rule=Host(`auth.local.gd`)'
+      - 'traefik.http.routers.keycloak.entrypoints=websecure'
+      - 'traefik.http.routers.keycloak.tls=true'
+      - 'traefik.http.services.keycloak.loadbalancer.server.port=4433'
+
 
 volumes:
   postgres:
@@ -256,4 +281,6 @@ volumes:
 
 networks:
   nestjs-network:
+    driver: bridge
+  nestjs-internal:
     driver: bridge
