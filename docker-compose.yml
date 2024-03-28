@@ -250,29 +250,45 @@ services:
     networks:
       - nestjs-network
 
-  kratos:
+  kratos: &kratos
     image: oryd/kratos:v1.1.0
     command:
+      - --config=/app/config.yml
       - serve
-      - --config /app/config.yml
     volumes:
       - ./infrastructure/kratos:/app
     environment:
-      DSN:
+      DSN: postgres://postgres:postgres@postgres:5432/kratos
       COURIER_SMTP_CONNECTION_URI: smtp://mailpit:mailpit@mailpit:1025
       COURIER_SMTP_FROM_ADDRESS: admin@unified-boilerplate.com
       COURIER_SMTP_FROM_NAME: Admin
       COURIER_SMS_FROM: +1234567890
       SELFSERVICE_METHODS_TOTP_CONFIG_ISSUER: unified-boilerplate
-      SECRETS_COOKIE: 'cookiesecret'
-      SECRETS_CIPHER: 'ciphersecret'
-      SECRETS_DEFAULT: 'defaultsecret'
+      SECRETS_COOKIE: 'cookiesecretcookiesecretcookiese'
+      SECRETS_CIPHER: 'ciphersecretciphersecretcipherse'
+      SECRETS_DEFAULT: 'defaultsecretdefaultsecretdefaul'
     labels:
       - 'traefik.enable=true'
       - 'traefik.http.routers.keycloak.rule=Host(`auth.local.gd`)'
       - 'traefik.http.routers.keycloak.entrypoints=websecure'
       - 'traefik.http.routers.keycloak.tls=true'
       - 'traefik.http.services.keycloak.loadbalancer.server.port=4433'
+    depends_on:
+      kratos-migrate:
+        condition: service_completed_successfully
+    networks:
+      - nestjs-network
+
+  kratos-migrate:
+    <<: *kratos
+    command:
+      - --config=/app/config.yml
+      - migrate
+      - sql
+      - -e
+      - -y
+    depends_on: []
+    labels: {}
 
 
 volumes:
