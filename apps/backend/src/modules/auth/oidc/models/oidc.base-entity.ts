@@ -1,17 +1,8 @@
-import { Column, DataType, DefaultScope, Model } from 'sequelize-typescript';
-import { Op } from 'sequelize';
+import { Column, DataType, Model } from 'sequelize-typescript';
 
-@DefaultScope(() => ({
-  where: {
-    // Don't return expired items
-    expiresAt: {
-      [Op.gt]: new Date().toISOString(),
-    },
-  },
-}))
 export class OidcBaseModel extends Model {
   @Column({
-    type: DataType.STRING,
+    type: DataType.STRING(65535),
     primaryKey: true,
   })
   id: string;
