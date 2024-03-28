@@ -11,6 +11,7 @@ export type OidcProviderModuleOptions = {
   // Add your options here
 };
 
+// Avoid transpiling the dynamic import
 const dynamicImport = async (module: string) => {
   return await eval(`import('${module}')`);
 };
@@ -31,7 +32,8 @@ export class OidcModule {
           provide: 'OIDC_PROVIDER',
           inject: [AccountService],
           useFactory: async (accountService: AccountService) => {
-            const Provider = (await dynamicImport('oidc-provider')).default;
+            const Provider = (await dynamicImport('oidc-provider'))
+              .default as typeof import('oidc-provider').default;
 
             const provider = new Provider('https://auth.local.gd', {
               adapter: (name) => new DatabaseAdapter(oidcModelMap[name]),
@@ -39,8 +41,9 @@ export class OidcModule {
                 {
                   client_id: 'foo',
                   client_secret: 'bar',
-                  grant_types: ['authorization_code'],
+                  grant_types: ['authorization_code', 'refresh_token'],
                   redirect_uris: ['https://oauth.pstmn.io/v1/callback'],
+                  scope: 'openid email profile offline_access',
                 },
               ],
               findAccount: accountService.findAccount.bind(accountService),

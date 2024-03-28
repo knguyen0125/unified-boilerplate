@@ -81,15 +81,13 @@ services:
       SMTP_URL: smtp://mailpit:mailpit@mailpit:1025
       WORKER_MODE: 'true'
       SCHEDULER_MODE: 'true'
-      AUTH_BASE_URL: 'auth.local.gd'
     env_file:
-      - path: './.env'
-        required: true
+      - './.env'
     volumes:
       - ./apps:/workspace/apps
     labels:
       - 'traefik.enable=true'
-      - 'traefik.http.routers.backend.rule=Host(`backend.local.gd`) || Host(`auth.local.gd`)'
+      - 'traefik.http.routers.backend.rule=Host(`backend.local.gd`)'
       - 'traefik.http.routers.backend.entrypoints=websecure'
       - 'traefik.http.routers.backend.tls=true'
       - 'traefik.http.services.backend.loadbalancer.server.port=8080'
@@ -145,8 +143,10 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: nestjs
+      POSTGRES_MULTIPLE_DATABASES: 'keycloak'
     volumes:
       - postgres:/var/lib/postgresql/data
+      - ./infrastructure/postgres/init-scripts:/docker-entrypoint-initdb.d
     healthcheck:
       test: 'pg_isready -U postgres'
       interval: 10s
@@ -216,6 +216,37 @@ services:
       - 'traefik.tcp.routers.mailpit.rule=HostSNI(`*`)'
       - 'traefik.tcp.routers.mailpit.entrypoints=mailpit'
       - 'traefik.tcp.services.mailpit.loadbalancer.server.port=1025'
+    networks:
+      - nestjs-network
+
+  keycloak:
+    build:
+      context: ./infrastructure/keycloak
+      dockerfile: Dockerfile
+    command:
+      - start
+      # Support theme development
+      - --spi-theme-static-max-age=-1
+      - --spi-theme-cache-themes=false
+      - --spi-theme-cache-templates=false
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: auth.local.gd
+      KC_HOSTNAME_ADMIN: auth-admin.local.gd
+      KC_PROXY_HEADERS: xforwarded
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: postgres
+      KC_HTTP_ENABLED: 'true'
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.keycloak.rule=Host(`auth.local.gd`) || Host(`auth-admin.local.gd`)'
+      - 'traefik.http.routers.keycloak.entrypoints=websecure'
+      - 'traefik.http.routers.keycloak.tls=true'
+      - 'traefik.http.services.keycloak.loadbalancer.server.port=8080'
+    volumes:
+      - ./infrastructure/keycloak/themes/mytheme:/opt/keycloak/themes/mytheme
     networks:
       - nestjs-network
 
